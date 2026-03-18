@@ -81,7 +81,7 @@
 <div class="elementor-container elementor-column-gap-default">
 <div class="elementor-column elementor-col-100 elementor-element">
 <div class="elementor-widget-wrap elementor-element-populated">
-<div class="elementor-element elementor-element-9302cab animated-slow elementor-invisible elementor-widget elementor-widget-image">
+<div class="elementor-element elementor-element-9302cab animated-slow elementor-widget elementor-widget-image">
 <div class="elementor-widget-container">
 <img alt="" decoding="async" fetchpriority="high" height="154" sizes="(max-width: 1024px) 100vw, 1024px" src="images/Efecto-Doppler-w-2048-1024x154.png" srcset="images/Efecto-Doppler-w-2048-1024x154.png 1024w, images/Efecto-Doppler-w-2048-300x45.png 300w, images/Efecto-Doppler-w-2048-768x116.png 768w, images/Efecto-Doppler-w-2048-1536x231.png 1536w, images/Efecto-Doppler-w-2048.png 2048w" width="1024"/> </div>
 </div>
@@ -454,6 +454,93 @@
 </footer>
 </div>
 <script>
+/* Video overlay play buttons */
+document.querySelectorAll('.jet-video__overlay').forEach(function(overlay){
+  overlay.addEventListener('click',function(){
+    var container=this.closest('.jet-video');
+    var video=container.querySelector('video');
+    if(video){
+      video.play();
+      this.style.display='none';
+    }
+  });
+});
+
+/* Accordion / toggle */
+document.querySelectorAll('.elementor-toggle .elementor-tab-title').forEach(function(title){
+  title.addEventListener('click',function(){
+    var isActive=this.classList.contains('elementor-active');
+    var tab=this.getAttribute('data-tab');
+    var parent=this.closest('.elementor-toggle');
+    /* Close all in this toggle group */
+    parent.querySelectorAll('.elementor-tab-title').forEach(function(t){
+      t.classList.remove('elementor-active');
+      t.setAttribute('aria-expanded','false');
+    });
+    parent.querySelectorAll('.elementor-tab-content').forEach(function(c){
+      c.style.display='none';
+    });
+    if(!isActive){
+      this.classList.add('elementor-active');
+      this.setAttribute('aria-expanded','true');
+      var content=parent.querySelector('.elementor-tab-content[data-tab="'+tab+'"]');
+      if(content) content.style.display='block';
+    }
+  });
+});
+
+/* Mobile menu toggle */
+var menuToggle=document.querySelector('.elementor-menu-toggle');
+if(menuToggle){
+  menuToggle.addEventListener('click',function(){
+    var isActive=this.classList.toggle('elementor-active');
+    this.setAttribute('aria-expanded',isActive?'true':'false');
+    var dropdown=this.nextElementSibling||document.querySelector('.elementor-nav-menu--dropdown');
+    if(dropdown){
+      dropdown.setAttribute('aria-hidden',isActive?'false':'true');
+      if(isActive){
+        dropdown.style.display='block';
+        dropdown.style.maxHeight='100vh';
+        dropdown.style.transform='scaleY(1)';
+      } else {
+        dropdown.style.maxHeight='0';
+        dropdown.style.transform='scaleY(0)';
+      }
+    }
+  });
+}
+
+/* Swiper carousel for brand logos */
+(function(){
+  var wrapper=document.querySelector('.elementor-image-carousel-wrapper.swiper');
+  if(wrapper){
+    var slides=wrapper.querySelectorAll('.swiper-slide');
+    var slideCount=slides.length;
+    if(slideCount>0){
+      var track=wrapper.querySelector('.swiper-wrapper');
+      /* Clone slides for infinite loop */
+      for(var i=0;i<2;i++){slides.forEach(function(s){track.appendChild(s.cloneNode(true))});}
+      var show=8;
+      if(window.matchMedia('(max-width:767px)').matches)show=3;
+      else if(window.matchMedia('(max-width:1024px)').matches)show=5;
+      var slideW=100/show;
+      track.querySelectorAll('.swiper-slide').forEach(function(s){s.style.flex='0 0 '+slideW+'%';s.style.maxWidth=slideW+'%';s.style.boxSizing='border-box';s.style.padding='0 10px'});
+      track.style.display='flex';
+      track.style.transition='transform 0.5s ease';
+      wrapper.style.overflow='hidden';
+      var pos=0;
+      setInterval(function(){
+        pos+=2;
+        track.style.transition='transform 0.5s ease';
+        track.style.transform='translateX(-'+(pos*slideW)+'%)';
+        if(pos>=slideCount){
+          setTimeout(function(){track.style.transition='none';pos=0;track.style.transform='translateX(0)'},520);
+        }
+      },5000);
+    }
+  }
+})();
+</script><script>
 document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('a[href*="#"]').forEach(function(a){
     a.addEventListener('click',function(e){

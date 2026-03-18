@@ -467,6 +467,39 @@
 </footer>
 </div>
 <script>
+/* Video overlay play buttons */
+document.querySelectorAll('.jet-video__overlay').forEach(function(overlay){
+  overlay.addEventListener('click',function(){
+    var container=this.closest('.jet-video');
+    var video=container.querySelector('video');
+    if(video){
+      video.play();
+      this.style.display='none';
+    }
+  });
+});
+
+/* Mobile menu toggle */
+var menuToggle=document.querySelector('.elementor-menu-toggle');
+if(menuToggle){
+  menuToggle.addEventListener('click',function(){
+    var isActive=this.classList.toggle('elementor-active');
+    this.setAttribute('aria-expanded',isActive?'true':'false');
+    var dropdown=this.nextElementSibling||document.querySelector('.elementor-nav-menu--dropdown');
+    if(dropdown){
+      dropdown.setAttribute('aria-hidden',isActive?'false':'true');
+      if(isActive){
+        dropdown.style.display='block';
+        dropdown.style.maxHeight='100vh';
+        dropdown.style.transform='scaleY(1)';
+      } else {
+        dropdown.style.maxHeight='0';
+        dropdown.style.transform='scaleY(0)';
+      }
+    }
+  });
+}
+</script><script>
 document.addEventListener('DOMContentLoaded',function(){
   document.querySelectorAll('a[href*="#"]').forEach(function(a){
     a.addEventListener('click',function(e){
